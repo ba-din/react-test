@@ -16,32 +16,23 @@ const TheLayout = React.lazy(() => import('./containers/TheLayout'));
 
 // Pages
 const Login = React.lazy(() => import('./views/pages/login/Login'));
-const ForgotPassword = React.lazy(() =>
-  import('./views/pages/forgotPassword/ForgotPassword')
-);
 
 const AppRoutes = () => {
   return (
     <React.Suspense fallback={loading}>
       <Switch>
         <Route exact path="/">
-          <Redirect to="/admin/dashboard" />
+          <Redirect to="/dashboard" />
         </Route>
         <Route
-          path="/admin"
-          name="Home"
+          path="/dashboard"
+          name="dashboard"
           render={(props) => <TheLayout {...props} />}
         />
         <Route
-          path="/auth/login"
+          path="/login"
           name="Login Page"
           render={(props) => <Login {...props} />}
-        />
-        <Route
-          exact
-          path="/forgot-password"
-          name="Forgot Password Page"
-          render={(props) => <ForgotPassword {...props} />}
         />
         <Route
           exact
@@ -55,15 +46,13 @@ const AppRoutes = () => {
 };
 
 const App = () => (
-  <ToastProvider>
-    <Router>
-      <AuthProvider>
-        <FetchProvider>
-          <AppRoutes />
-        </FetchProvider>
-      </AuthProvider>
-    </Router>
-  </ToastProvider>
+  <Router>
+    <AuthProvider>
+      <FetchProvider>
+        <AppRoutes />
+      </FetchProvider>
+    </AuthProvider>
+  </Router>
 );
 
 export default App;

@@ -16,9 +16,9 @@ React.icons = icons
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App/>
+      <App />
     </Provider>
-  </React.StrictMode>, 
+  </React.StrictMode>,
   document.getElementById('root')
 );
 
