@@ -58,6 +58,7 @@ const EVoucher = ({ fetchData, changeData, message }) => {
     'desc',
     'expiredAt',
     'image',
+    'qty',
     'price',
     'paymentMethods',
     'active',
@@ -108,13 +109,15 @@ const EVoucher = ({ fetchData, changeData, message }) => {
                 'paymentMethods':
                   (item) => (
                     <td>
-                      {
-                        item.paymentMethods.map((payment) => (
-                          <>
-                            {payment.name} - Discount : {payment.discountAmount ? `${payment.discountAmount} ${payment.discount}` : '-'}
-                          </>
-                        ))
-                      }
+                      <ul style={{listStyle: 'none'}}>
+                        {
+                          item.paymentMethods.map((payment) => (
+                            <li>
+                              {payment.name} {payment.discountAmount ? ` (Discount : ${payment.discountAmount} ${payment.discount})` : ''}
+                            </li>
+                          ))
+                        }
+                      </ul>
                     </td>
                   ),
                 'createdAt':
