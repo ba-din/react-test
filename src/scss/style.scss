@@ -7,3 +7,14 @@
 // If you want to add something do it here
 @import "custom";
 
+.modal {
+  position: absolute !important;
+  background: rgba(0, 0, 0, 0.9);
+  > .modal-dialog {
+    top: 200px;
+
+    .modal-body {
+      padding: 30px;
+    }
+  }
+}

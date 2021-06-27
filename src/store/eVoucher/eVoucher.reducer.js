@@ -1,10 +1,10 @@
-import { bindActionCreators } from "redux";
 import eVoucherTypes from "./eVoucher.types";
 
 const initState = {
   eVoucherList: [],
   message: null,
   detailEVoucher: null,
+  detailPromoCode: null,
 };
 
 const eVoucherReducer = (state = initState, action) => {
@@ -19,6 +19,8 @@ const eVoucherReducer = (state = initState, action) => {
       return { ...state, detailEVoucher: action.payload.data, message: null };
     case eVoucherTypes.SET_DETAIL_EVOUCHER:
       return { ...state, detailEVoucher: action.payload, message: null };
+    case eVoucherTypes.PURCHASE_EVOUCHER:
+      return { ...state, detailPromoCode: action.payload.data, message: action.payload };
     default:
       return state;
   }

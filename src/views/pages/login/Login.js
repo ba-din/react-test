@@ -67,7 +67,7 @@ const Login = () => {
               })
             })
           setTimeout(() => {
-            history.push('/dashboard')
+            history.push('/e-voucher')
           }, 700);
           Toast.fire({
             icon: 'success',

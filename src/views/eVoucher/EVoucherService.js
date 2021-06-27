@@ -30,4 +30,10 @@ export const updateEVoucher = (api, body) => [
   eVoucherTypes.UPDATE_EVOUCHER_ERROR,
 ]
 
+export const purchaseEVoucher = (api, body) => [
+  api.post(eVoucherTypes.PURCHASE_EVOUCHER_URL, body),
+  eVoucherTypes.PURCHASE_EVOUCHER,
+  eVoucherTypes.PURCHASE_EVOUCHER_ERROR,
+]
+
 export const setDetailEVoucher = (data) => [eVoucherTypes.SET_DETAIL_EVOUCHER, data];

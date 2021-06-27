@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import {
   CButton,
-  CInvalidFeedback,
   CForm,
   CFormGroup,
   CLabel,
   CInput,
   CCol,
-  // CInputFile,
   CFormText,
   CSelect
 } from '@coreui/react';
@@ -32,17 +30,17 @@ const initialValues = {
 const EVocuherForm = ({ defaultValues, onSubmitForm }) => {
 
   const getMasterCard = () => {
-    if(!defaultValues) return null
+    if (!defaultValues) return null
 
     const masterCardArray = defaultValues.paymentMethods.filter((payment) => payment.name === 'master_card')
-    return masterCardArray.length > 0 ?  masterCardArray[0] : null
+    return masterCardArray.length > 0 ? masterCardArray[0] : null
   }
 
   const getVisaCard = () => {
-    if(!defaultValues) return null
+    if (!defaultValues) return null
 
     const visaCardArray = defaultValues.paymentMethods.filter((payment) => payment.name === 'visa_card')
-    return visaCardArray.length > 0 ?  visaCardArray[0] : null
+    return visaCardArray.length > 0 ? visaCardArray[0] : null
   }
 
   const [usedMasterCard, setUsedMasterCard] = useState(
@@ -164,7 +162,6 @@ const EVocuherForm = ({ defaultValues, onSubmitForm }) => {
               value={values.title}
               required
             />
-            <CInvalidFeedback>{errors.title}</CInvalidFeedback>
           </CFormGroup>
           <CFormGroup>
             <CLabel htmlFor="nf-desc">Description</CLabel>
@@ -291,11 +288,11 @@ const EVocuherForm = ({ defaultValues, onSubmitForm }) => {
 
                 <CCol xs="3" md="3">
                   <CSelect
-                  custom size="sm" name="masterDiscount" id="masterDiscount"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.masterDiscount}
-                >
+                    custom size="sm" name="masterDiscount" id="masterDiscount"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.masterDiscount}
+                  >
                     <option value="percent">%</option>
                     <option value="value">Vlaue</option>
                   </CSelect>
