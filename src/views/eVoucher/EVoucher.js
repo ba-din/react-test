@@ -11,7 +11,8 @@ import { fetchData, changeData } from '../../store/action';
 import { FetchContext } from '../../context/fetchContext';
 import {
   getEVoucherList,
-  updateEVocherStatus
+  updateEVocherStatus,
+  setDetailEVoucher
 } from './EVoucherService';
 import { useHistory } from 'react-router-dom';
 import moment from 'moment';
@@ -31,7 +32,7 @@ const EVoucher = ({ fetchData, changeData, message }) => {
   }, [api, fetchData])
 
   useEffect(() => {
-    if(message && message.status === 200) {
+    if (message && message.status === 200) {
       fetchData(getEVoucherList(api))
       Toast.fire({
         icon: 'success',
@@ -40,11 +41,16 @@ const EVoucher = ({ fetchData, changeData, message }) => {
     }
   }, [api, fetchData, message])
 
-  const onHandleUpdateStatus = (item) => {
-    fetchData(updateEVocherStatus(api, {
+  const onHandleUpdateStatus = async (item) => {
+    await fetchData(updateEVocherStatus(api, {
       id: item.id,
       status: !item.status
     }))
+  }
+
+  const onHandleUpdateEVoucher = async (item) => {
+    await changeData(setDetailEVoucher(null))
+    history.push(`/e-voucher/${item.id}/edit`);
   }
 
   const fields = [
@@ -99,6 +105,18 @@ const EVoucher = ({ fetchData, changeData, message }) => {
                       />
                     </td>
                   ),
+                'paymentMethods':
+                  (item) => (
+                    <td>
+                      {
+                        item.paymentMethods.map((payment) => (
+                          <>
+                            {payment.name} - Discount : {payment.discountAmount ? `${payment.discountAmount} ${payment.discount}` : '-'}
+                          </>
+                        ))
+                      }
+                    </td>
+                  ),
                 'createdAt':
                   (item) => (
                     <td>
@@ -112,7 +130,7 @@ const EVoucher = ({ fetchData, changeData, message }) => {
                         size='sm'
                         color='info'
                         className={'float-right mb-0 ml-2'}
-                        onClick={() => history.push('/e-voucher/create')}
+                        onClick={() => onHandleUpdateEVoucher(item)}
                       >
                         Edit
                       </CButton>

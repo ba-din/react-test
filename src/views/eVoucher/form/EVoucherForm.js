@@ -30,10 +30,36 @@ const initialValues = {
 };
 
 const EVocuherForm = ({ defaultValues, onSubmitForm }) => {
-  const [usedMasterCard, setUsedMasterCard] = useState(false);
-  const [usedVisaCard, setUsedVisaCard] = useState(false);
 
-  let formInitial = defaultValues ? defaultValues : initialValues
+  const getMasterCard = () => {
+    if(!defaultValues) return null
+
+    const masterCardArray = defaultValues.paymentMethods.filter((payment) => payment.name === 'master_card')
+    return masterCardArray.length > 0 ?  masterCardArray[0] : null
+  }
+
+  const getVisaCard = () => {
+    if(!defaultValues) return null
+
+    const visaCardArray = defaultValues.paymentMethods.filter((payment) => payment.name === 'visa_card')
+    return visaCardArray.length > 0 ?  visaCardArray[0] : null
+  }
+
+  const [usedMasterCard, setUsedMasterCard] = useState(
+    defaultValues && getMasterCard() ? true : false
+  );
+
+  const [usedVisaCard, setUsedVisaCard] = useState(
+    defaultValues && getVisaCard() ? true : false
+  );
+
+  let formInitial = defaultValues ? {
+    ...defaultValues,
+    masterDiscount: getMasterCard() ? getMasterCard().discount : 'percent',
+    masterDiscountAmount: getMasterCard() ? getMasterCard().discountAmount : '',
+    visaDiscount: getVisaCard() ? getVisaCard().discount : 'percent',
+    visaDiscountAmount: getVisaCard() ? getVisaCard().discountAmount : '',
+  } : initialValues
 
   const onSubmit = (values, { setSubmitting }) => {
     const form = { ...values };
@@ -201,14 +227,14 @@ const EVocuherForm = ({ defaultValues, onSubmitForm }) => {
           <CFormGroup row>
             <CCol md="3">
               <CLabel htmlFor="expiredAt">Enter Expire Date</CLabel>
-              <CInput t
+              <CInput
                 type="date"
                 id="expiredAt"
                 name="expiredAt"
                 placeholder="date"
                 onChange={handleChange}
                 onBlur={handleBlur}
-                value={values.expiredAt}
+                value={moment(new Date(values.expiredAt)).format('YYYY-MM-DD')}
                 required
               />
             </CCol>
@@ -264,7 +290,12 @@ const EVocuherForm = ({ defaultValues, onSubmitForm }) => {
                 </CCol>
 
                 <CCol xs="3" md="3">
-                  <CSelect custom size="sm" name="masterDiscount" id="masterDiscount" value={values.masterDiscount}>
+                  <CSelect
+                  custom size="sm" name="masterDiscount" id="masterDiscount"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.masterDiscount}
+                >
                     <option value="percent">%</option>
                     <option value="value">Vlaue</option>
                   </CSelect>
@@ -299,7 +330,7 @@ const EVocuherForm = ({ defaultValues, onSubmitForm }) => {
                     onBlur={handleBlur}
                     value={values.visaDiscount}
                   >
-                    <option value="percent" selected>%</option>
+                    <option value="percent">%</option>
                     <option value="value">Vlaue</option>
                   </CSelect>
                 </CCol>

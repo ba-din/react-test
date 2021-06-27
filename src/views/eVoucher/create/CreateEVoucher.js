@@ -1,5 +1,5 @@
 import React, {useEffect, useContext} from 'react';
-import { CCard, CCardHeader, CCardBody, CButton, CForm, CFormGroup, CLabel, CInput, CFormText } from '@coreui/react';
+import { CCard, CCardHeader, CCardBody } from '@coreui/react';
 import { connect } from 'react-redux';
 import { fetchData, changeData } from '../../../store/action';
 import { FetchContext } from '../../../context/fetchContext';
