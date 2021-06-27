@@ -13,18 +13,18 @@ import {
 } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import apiClient from '../util/apiClient.js';
+import { useHistory } from 'react-router-dom';
 
 const TheLayout = () => {
   const darkMode = useSelector(state => state.darkMode)
   const authContext = useContext(AuthContext);
-  const [isExpired, setIsExpired] = useState(false);
   const classes = classNames(
     'c-app c-default-layout',
     darkMode && 'c-dark-theme'
   )
+  const history = useHistory();
 
   useEffect(() => {
-    console.log(authContext.authState)
     if (authContext.isExpired()) {
       Swal.fire({
         icon: 'warning',
@@ -36,26 +36,23 @@ const TheLayout = () => {
       })
         .then((result) => {
           if (result.isConfirmed) {
-            const auth = { ...authContext.authState.auth }
+            const auth = { ...authContext.authState }
             apiClient.post('/getAccessToken', { userId: auth.id, enableRefresh: true })
               .then((res) => res.data)
               .then((data) => {
                 console.log(data.data.accessToken)
                 authContext.setAuthState({
-                  auth: {
-                    id: auth.id,
-                    name: auth.name,
-                    accessToken: data.data.accessToken,
-                    expiredAt: data.data.expiredAt
-                  },
+                  id: auth.id,
+                  name: auth.name,
+                  accessToken: data.data.accessToken,
+                  expiredAt: data.data.expiredAt
                 })
               })
+              history.push('/dashboard')
           } else {
-            setIsExpired(true)
             authContext.logout()
           }
         })
-      setIsExpired(true)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

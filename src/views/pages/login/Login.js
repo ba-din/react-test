@@ -65,7 +65,7 @@ const Login = () => {
                 ...data.data,
               })
               authContext.setAuthState({
-                auth: userData,
+                ...userData
               })
             })
           setTimeout(() => {

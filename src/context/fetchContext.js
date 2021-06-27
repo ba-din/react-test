@@ -16,7 +16,7 @@ const FetchProvider = ({ children }) => {
 
   api.interceptors.request.use(
     (config) => {
-      config.headers.Authorization = `Bearer ${authContext.authState.token.token}`;
+      config.headers.Authorization = `Bearer ${authContext.authState.accessToken}`;
       return config;
     },
     (error) => {

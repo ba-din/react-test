@@ -22,9 +22,7 @@ const AuthProvider = ({ children }) => {
     const auth = localStorage.getItem(AUTH_INFO);
     const authInfo = auth ? JSON.parse(auth) : null
 
-    setAuthState({
-      auth: authInfo ? authInfo : {},
-    });
+    setAuthState({...authInfo});
   }, []);
 
   const logout = () => {
@@ -34,24 +32,25 @@ const AuthProvider = ({ children }) => {
     history.push('/login');
   };
 
-  const setAuthInfo = ({ auth }) => {
+  const setAuthInfo = (auth) => {
+    console.log(JSON.stringify(auth), 'xxxxxxxxxxxxxxxxxx')
     localStorage.setItem(AUTH_INFO, JSON.stringify(auth));
 
     setAuthState({
-      auth
+      ...auth
     });
   };
 
   const isAuthenticated = () => {
-    return authState.auth && authState.auth.accessToken && authState.auth.expiredAt ? true : false
+    return authState && authState.accessToken && authState.expiredAt ? true : false
   };
 
   const isExpired = () => {
     if (
-      authState.auth &&
-      authState.auth.accessToken &&
-      authState.auth.expiredAt &&
-      new Date().getTime() > new Date(authState.auth.expiredAt).getTime()
+      authState &&
+      authState.accessToken &&
+      authState.expiredAt &&
+      new Date().getTime() > new Date(authState.expiredAt).getTime()
     ) {
       logout();
       return true;
