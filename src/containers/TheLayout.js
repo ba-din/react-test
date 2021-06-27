@@ -1,4 +1,4 @@
-import React, { useContext, useState , useEffect} from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import classNames from 'classnames'
 import {
@@ -30,34 +30,37 @@ const TheLayout = () => {
         icon: 'warning',
         title: 'Session Expired',
         text: "Session expired. Do you want to Continue Log in.",
+        showCancelButton: true,
         confirmButtonText: "Continue",
         cancelButtonText: "Log out",
       })
         .then((result) => {
           if (result.isConfirmed) {
-            // authContext.authState = {id, accessToken, expiredAt}
-            apiClient.post('/getAccessToken', {userId: authContext.authState.id})
-            .then((res) => res.data)
-            .then((data) => {
-              authContext.setAuthState({
-                auth: {
-                  ...authContext.authState,
-                  accessToken: data.data.accessToken,
-                  expiredAt: data.data.expiredAt
-                },
+            const auth = { ...authContext.authState.auth }
+            apiClient.post('/getAccessToken', { userId: auth.id, enableRefresh: true })
+              .then((res) => res.data)
+              .then((data) => {
+                console.log(data.data.accessToken)
+                authContext.setAuthState({
+                  auth: {
+                    id: auth.id,
+                    name: auth.name,
+                    accessToken: data.data.accessToken,
+                    expiredAt: data.data.expiredAt
+                  },
+                })
               })
-            })
           } else {
             setIsExpired(true)
             authContext.logout()
           }
         })
-        setIsExpired(true)
+      setIsExpired(true)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if (isExpired || !authContext.isAuthenticated()) {
+  if (!authContext.isAuthenticated()) {
     return (
       <Redirect to="/login" />
     )

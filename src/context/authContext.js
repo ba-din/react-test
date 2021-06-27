@@ -43,7 +43,7 @@ const AuthProvider = ({ children }) => {
   };
 
   const isAuthenticated = () => {
-    return authState.auth.accessToken && authState.auth.expiredAt ? true : false
+    return authState.auth && authState.auth.accessToken && authState.auth.expiredAt ? true : false
   };
 
   const isExpired = () => {

@@ -62,7 +62,7 @@ const Login = () => {
             .then((res) => res.data)
             .then((data) => {
               Object.assign(userData, {
-                ...data.data
+                ...data.data,
               })
               authContext.setAuthState({
                 auth: userData,
