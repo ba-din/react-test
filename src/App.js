@@ -21,18 +21,23 @@ const AppRoutes = () => {
   return (
     <React.Suspense fallback={loading}>
       <Switch>
-        <Route exact path="/">
-          <Redirect to="/dashboard" />
-        </Route>
-        <Route
-          path="/dashboard"
-          name="dashboard"
-          render={(props) => <TheLayout {...props} />}
-        />
         <Route
           path="/login"
           name="Login Page"
           render={(props) => <Login {...props} />}
+        />
+        <Route exact path="/">
+          <Redirect to="/e-voucher" />
+        </Route>
+        <Route
+          path="/e-voucher"
+          name="EVoucher"
+          render={(props) => <TheLayout {...props} />}
+        />
+        <Route
+          path="/"
+          name="home"
+          render={(props) => <TheLayout {...props} />}
         />
         <Route
           exact

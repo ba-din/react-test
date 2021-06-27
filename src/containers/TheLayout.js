@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import classNames from 'classnames'
 import {
@@ -8,9 +8,6 @@ import {
   TheHeader
 } from './index'
 import { AuthContext } from '../context/authContext'
-import {
-  Redirect,
-} from 'react-router-dom';
 import Swal from 'sweetalert2';
 import apiClient from '../util/apiClient.js';
 import { useHistory } from 'react-router-dom';
@@ -59,7 +56,7 @@ const TheLayout = () => {
 
   if (!authContext.isAuthenticated()) {
     return (
-      <Redirect to="/login" />
+      history.push('/login')
     )
   }
 

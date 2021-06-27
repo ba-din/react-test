@@ -1,11 +1,12 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-
-const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'));
+import EVoucher from './views/eVoucher/EVoucher.js';
+import CreateEVoucher from './views/eVoucher/create/CreateEVoucher.js';
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
-  { path: '/dashboard', name: 'Dashboard', component: Dashboard },
+  { path: '/e-voucher/create', name: 'Create', component: CreateEVoucher },
+  { path: '/e-voucher', name: 'E-Voucher List', component: EVoucher },
   {
     path: '/errors/error-404',
     name: 'Page404',

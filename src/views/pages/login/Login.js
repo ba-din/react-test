@@ -30,9 +30,7 @@ const Login = () => {
   useEffect(() => {
     if (authContext.isExpired()) {
       Toast.fire('error', 'Session expired please login again')
-
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
