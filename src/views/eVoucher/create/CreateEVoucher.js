@@ -1,17 +1,39 @@
 import React, {useEffect, useContext} from 'react';
 import { CCard, CCardHeader, CCardBody, CButton, CForm, CFormGroup, CLabel, CInput, CFormText } from '@coreui/react';
-import { connect, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import { fetchData, changeData } from '../../../store/action';
 import { FetchContext } from '../../../context/fetchContext';
 import EVoucherForm from '../form/EVoucherForm';
+import {
+  createEVocher
+} from '../EVoucherService';
+import Toast from '../../../components/Toast';
+import { useHistory } from 'react-router-dom';
 
 const CreateEVoucher = ({ fetchData, changeData, message }) => {
   const fetchContext = useContext(FetchContext);
-  // const authContext = useContext(AuthContext);
   const api = fetchContext.authFetch;
+  const history = useHistory();
+
+  useEffect(() => {
+    if(message) {
+      if(message.status > 200) Toast.fire({
+        icon: 'error',
+        text: message.message
+      })
+
+      if(message.status === 200) {
+        Toast.fire({
+          icon: 'success',
+          text: message.message
+        })
+        history.push('/e-voucher')
+      }
+    }
+  }, [history, message])
 
   const onSubmitHandler = (form) => {
-    console.log(form)
+    fetchData(createEVocher(api, form))
   }
 
   return (
@@ -29,7 +51,7 @@ const CreateEVoucher = ({ fetchData, changeData, message }) => {
 }
 
 const mapStateToProps = ({ eVoucher }) => ({
-  // eVoucherList: eVoucher.eVoucherList,
+  message: eVoucher.message
 });
 
 export default connect(mapStateToProps, { fetchData, changeData })(CreateEVoucher);

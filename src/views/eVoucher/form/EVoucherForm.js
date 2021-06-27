@@ -7,41 +7,33 @@ import {
   CLabel,
   CInput,
   CCol,
-  CInputFile,
+  // CInputFile,
+  CFormText,
   CSelect
 } from '@coreui/react';
 import { Formik, Field } from 'formik';
-import Swal from 'sweetalert2';
+import Toast from '../../../components/Toast';
+import moment from 'moment';
 
 const initialValues = {
   title: '',
   desc: '',
   image: '',
   price: '',
+  qty: 0,
+  expiredAt: '',
   paymentMethods: [],
   masterDiscount: 'percent',
   masterDiscountAmount: '',
   visaDiscount: 'percent',
-  visaDiscountAmount: ''
+  visaDiscountAmount: '',
 };
 
-const EVocuherForm = ({defaultValues, onSubmitForm}) => {
+const EVocuherForm = ({ defaultValues, onSubmitForm }) => {
   const [usedMasterCard, setUsedMasterCard] = useState(false);
   const [usedVisaCard, setUsedVisaCard] = useState(false);
 
   let formInitial = defaultValues ? defaultValues : initialValues
-
-  const Toast = Swal.mixin({
-    toast: true,
-    position: 'top-end',
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true,
-    didOpen: (toast) => {
-      toast.addEventListener('mouseenter', Swal.stopTimer)
-      toast.addEventListener('mouseleave', Swal.resumeTimer)
-    }
-  })
 
   const onSubmit = (values, { setSubmitting }) => {
     const form = { ...values };
@@ -59,6 +51,14 @@ const EVocuherForm = ({defaultValues, onSubmitForm}) => {
       Toast.fire({
         icon: 'error',
         text: "Price is required"
+      })
+      return
+    }
+
+    if (!form.expiredAt) {
+      Toast.fire({
+        icon: 'error',
+        text: "Expire Date is required"
       })
       return
     }
@@ -93,11 +93,13 @@ const EVocuherForm = ({defaultValues, onSubmitForm}) => {
       )
     }
 
-    console.log({
+    onSubmitForm({
       title: form.title,
       desc: form.desc,
       price: form.price,
       image: form.image,
+      expiredAt: form.expiredAt,
+      qty: form.qty,
       paymentMethods
     })
   }
@@ -131,8 +133,6 @@ const EVocuherForm = ({defaultValues, onSubmitForm}) => {
               id="title"
               name="title"
               placeholder="Enter Title"
-              valid={touched.title && !errors.title}
-              invalid={touched.title && !!errors.title}
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.title}
@@ -154,17 +154,39 @@ const EVocuherForm = ({defaultValues, onSubmitForm}) => {
           </CFormGroup>
           <CFormGroup>
             <CLabel htmlFor="nf-image">Select Image</CLabel>
-            <CCol xs="12" md="9">
-              <CInputFile
+            {/* TODO: updloading Image */}
+            {/* <CInputFile
                 id="=image" name="image"
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.image}
-              />
-            </CCol>
+              /> */}
+            <CInput
+              type="test"
+              id="image"
+              name="image"
+              placeholder="Enter Image URL"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.image}
+            />
+            <CFormText className="help-block">Please Enter Image URL</CFormText>
           </CFormGroup>
           <CFormGroup>
-            <CLabel htmlFor="nf-price">Enter Price</CLabel>
+            <CLabel htmlFor="nf-price">Quantity</CLabel>
+            <CInput
+              type="number"
+              id="qty"
+              name="qty"
+              placeholder="Enter Quantity"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.qty}
+              required
+            />
+          </CFormGroup>
+          <CFormGroup>
+            <CLabel htmlFor="price">Enter Price</CLabel>
             <CInput
               type="number"
               id="price"
@@ -176,9 +198,20 @@ const EVocuherForm = ({defaultValues, onSubmitForm}) => {
               required
             />
           </CFormGroup>
-          <CFormGroup>
-            <CLabel htmlFor="nf-status">Status</CLabel>
-            {/* TODO: Add toggle */}
+          <CFormGroup row>
+            <CCol md="3">
+              <CLabel htmlFor="expiredAt">Enter Expire Date</CLabel>
+              <CInput t
+                type="date"
+                id="expiredAt"
+                name="expiredAt"
+                placeholder="date"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.expiredAt}
+                required
+              />
+            </CCol>
           </CFormGroup>
           <CFormGroup row>
             <CCol md="3">

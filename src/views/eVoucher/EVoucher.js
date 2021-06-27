@@ -1,22 +1,63 @@
-import React, {useEffect, useContext} from 'react';
-import { CCard, CCardHeader, CCardBody, CButton } from '@coreui/react';
+import React, { useEffect, useContext } from 'react';
+import {
+  CCard,
+  CCardHeader,
+  CCardBody,
+  CButton,
+  CDataTable
+} from '@coreui/react';
 import { connect, useSelector } from 'react-redux';
 import { fetchData, changeData } from '../../store/action';
 import { FetchContext } from '../../context/fetchContext';
 import {
-  getEVoucherList
+  getEVoucherList,
+  updateEVocherStatus
 } from './EVoucherService';
 import { useHistory } from 'react-router-dom';
+import moment from 'moment';
+import Image from '../../components/Image.js';
+import Toggle from 'react-toggle';
+import Toast from '../../components/Toast.js';
 
 const EVoucher = ({ fetchData, changeData, message }) => {
   const fetchContext = useContext(FetchContext);
-  // const authContext = useContext(AuthContext);
   const api = fetchContext.authFetch;
   const history = useHistory();
 
+  const eVoucherList = useSelector(({ eVoucher }) => eVoucher.eVoucherList)
+
   useEffect(() => {
-    fetchData(getEVoucherList(api, {}))
+    fetchData(getEVoucherList(api))
   }, [api, fetchData])
+
+  useEffect(() => {
+    if(message && message.status === 200) {
+      fetchData(getEVoucherList(api))
+      Toast.fire({
+        icon: 'success',
+        text: message.message
+      })
+    }
+  }, [api, fetchData, message])
+
+  const onHandleUpdateStatus = (item) => {
+    fetchData(updateEVocherStatus(api, {
+      id: item.id,
+      status: !item.status
+    }))
+  }
+
+  const fields = [
+    'title',
+    'desc',
+    'expiredAt',
+    'image',
+    'price',
+    'paymentMethods',
+    'active',
+    'createdAt',
+    'actions'
+  ]
 
   return (
     <CCard>
@@ -25,7 +66,7 @@ const EVoucher = ({ fetchData, changeData, message }) => {
         <div className='card-header-actions'>
           <CButton
             size='sm'
-            color='info'
+            color='primary'
             className={'float-right mb-0 ml-2'}
             onClick={() => history.push('/e-voucher/create')}
           >
@@ -34,14 +75,71 @@ const EVoucher = ({ fetchData, changeData, message }) => {
         </div>
       </CCardHeader>
       <CCardBody>
-        <h1>Hello Gatone</h1>
+        {
+          eVoucherList && (
+            < CDataTable
+              items={eVoucherList}
+              fields={fields}
+              striped
+              itemsPerPage={5}
+              pagination
+              scopedSlots={{
+                'expiredAt':
+                  (item) => (
+                    <td>
+                      {moment(new Date(item.expiredAt)).format('MMM DD, YYYY')}
+                    </td>
+                  ),
+                'image':
+                  (item) => (
+                    <td>
+                      <Image
+                        src={item.image}
+                        size="40px"
+                      />
+                    </td>
+                  ),
+                'createdAt':
+                  (item) => (
+                    <td>
+                      {moment(new Date(item.createdAt)).format('MMM DD, YYYY')}
+                    </td>
+                  ),
+                'actions':
+                  (item) => (
+                    <td>
+                      <CButton
+                        size='sm'
+                        color='info'
+                        className={'float-right mb-0 ml-2'}
+                        onClick={() => history.push('/e-voucher/create')}
+                      >
+                        Edit
+                      </CButton>
+                    </td>
+                  ),
+                'active':
+                  (item) => (
+                    <td>
+                      <Toggle
+                        checked={item.status}
+                        onChange={() => onHandleUpdateStatus(item)}
+                      />
+                    </td>
+                  )
+
+              }}
+            />
+          )
+        }
       </CCardBody>
     </CCard>
   )
 }
 
 const mapStateToProps = ({ eVoucher }) => ({
-  // eVoucherList: eVoucher.eVoucherList,
+  eVoucherList: eVoucher.eVoucherList,
+  message: eVoucher.message
 });
 
 export default connect(mapStateToProps, { fetchData, changeData })(EVoucher);
