@@ -9,8 +9,6 @@ import {
   CModalHeader,
   CModalTitle,
   CModalBody,
-  CModalFooter
-
 } from '@coreui/react';
 import { connect, useSelector } from 'react-redux';
 import { fetchData, changeData } from '../../store/action';
