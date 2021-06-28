@@ -4,7 +4,7 @@ const apiEndPoints = {
   UPDATE_EVOUCHER: 'e-voucher/update',
   UPDATE_EVOUCHER_STATUS: 'e-voucher/updateStatus',
   GET_EVOUCHER_DETAIL: 'e-voucher/detail',
-  PURCHASE_EVOUCHER: 'e-voucher/purchase'
+  CREATE_PROMO_CODE: 'promo-code/create'
 }
 
 export default apiEndPoints;
